@@ -1,28 +1,28 @@
-from flask import Flask, request, make_response, redirect, abort
+from flask import Flask, request, make_response, redirect, abort, render_template
+from flask_bootstrap import Bootstrap
+#from flask_moment import moment
+from datetime import datetime, timedelta
+
 app = Flask(__name__)
+bootstrap = Bootstrap(app)
 
 aula = "Aula 030"
 
 @app.route('/')
 def index():
-    return '''
-            <h1>Avaliação contínua: {}</h1>
-            <ul>
-                <li><a href="https://cyclon.pythonanywhere.com/"> Home </a></li>
-                <li><a href="https://cyclon.pythonanywhere.com/user/Lucas%20Kenzo%20Cyra/PT3025764/IFSP"> Identificação </a></li>
-                <li><a href="https://cyclon.pythonanywhere.com/contextorequisicao"> Contexto da requisição </a></li>
-            </ul>
-           '''.format(aula)
+    current_time = datetime.now()
+    formatted_time = current_time.strftime("%B %d, %Y %I:%M %p")
+    minutes_ago = (datetime.now() - current_time).seconds // 60
+    return render_template('index.html', current_time=formatted_time, minutes_ago=minutes_ago)
 
-@app.route('/user/<name>/<id>/<instution>')
-def user(name, id, instution):
-    return '''
-            <h1>Avaliação contínua: {}</h1>
-            <h2>Aluno: {}</h2>
-            <h2>Prontuário: {}</h2>
-            <h2>Instituição: {}</h2>
-            <a href="https://cyclon.pythonanywhere.com/"> Voltar </a>
-           '''.format(aula, name, id, instution)
+@app.route('/user/<name>')
+def user(name):
+    return render_template('user.html', name=name)
+
+@app.route('/rotainexistente')
+def rotainexistente():
+    return render_template('404.html')
+
 
 @app.route('/contextorequisicao')
 def contextorequisicao():
