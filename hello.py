@@ -1,19 +1,17 @@
 from flask import Flask, request, make_response, redirect, abort, render_template
 from flask_bootstrap import Bootstrap
-#from flask_moment import moment
-from datetime import datetime, timedelta
+from flask_moment import Moment
+from datetime import datetime
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
+moment = Moment(app)
 
 aula = "Aula 030"
 
 @app.route('/')
 def index():
-    current_time = datetime.now()
-    formatted_time = current_time.strftime("%B %d, %Y %I:%M %p")
-    minutes_ago = (datetime.now() - current_time).seconds // 60
-    return render_template('index.html', current_time=formatted_time, minutes_ago=minutes_ago)
+    return render_template('index.html', current_time=datetime.utcnow())
 
 @app.route('/user/<name>')
 def user(name):
@@ -60,3 +58,6 @@ def redirecionamento():
 @app.route('/abortar')
 def abortar():
     abort(404, 'The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.')
+
+if __name__ == '__main__':
+    app.run(debug=True)
