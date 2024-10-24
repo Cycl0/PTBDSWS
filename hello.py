@@ -13,27 +13,20 @@ aula = "Aula 030"
 def index():
     return render_template('index.html', current_time=datetime.utcnow())
 
-@app.route('/user/<name>')
-def user(name):
-    return render_template('user.html', name=name)
+@app.route('/user/<name>/<id>/<inst>/')
+def user(name, id, inst):
+    return render_template('user.html', name=name, id=id, inst=inst)
 
 @app.route('/rotainexistente')
 def rotainexistente():
     return render_template('404.html')
 
-
-@app.route('/contextorequisicao')
-def contextorequisicao():
+@app.route('/contextorequisicao/<name>')
+def contextorequisicao(name):
     user_agent = request.headers.get('User-Agent')
-    ip_remote = request.remote_addr
+    ip = request.remote_addr
     host = request.host_url
-    return '''
-              <h1>Avaliação contínua: {}</h1>
-              <h2>Seu navegador é: {}</h2>
-              <h2>O IP do cumputador remoto é: {}</h2>
-              <h2>O host da aplicação é: {}</h2>
-              <a href="https://cyclon.pythonanywhere.com/"> Voltar </a>
-           '''.format(aula, user_agent, ip_remote, host)
+    return render_template('contextorequisicao.html', name=name, user_agent=user_agent, ip=ip, host=host)
 
 @app.route('/codigostatusdiferente')
 def codigostatusdiferente():
