@@ -3,8 +3,14 @@
 {% block page_content %}
 <div class="page-header">
   <h1>Olá, {% if name %} {{ name + ' ' + last_name }} {% else %} Estranho {% endif %}!</h1>
+  {% if not known %}
+  <h3>-- Pleased to meet you! --</h3>
+  {% else %}
+  <h3>-- Happy to see you again! --</h3>
+  {% endif %}
   <h2>A sua instuição de ensino é {{ inst }}</h2>
   <h2>Está cursando a disciplina de {{ disc }}</h2>
+  <h2>Seu cargo é {{ role }}</h2>
   <section>
     <h3>O IP do computador remoto é: {{ ip }}</h3>
     <h3>O host da aplicação é: {{ host }}</h3>
