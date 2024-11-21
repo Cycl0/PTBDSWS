@@ -1,8 +1,84 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+
+<style>
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Arial', sans-serif;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: white;
+    }
+
+    .table thead {
+        background-color: #4a90e2;
+        color: white;
+    }
+
+    .table th, .table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .table th {
+        text-transform: uppercase;
+        font-size: 0.9em;
+        letter-spacing: 0.1em;
+        font-weight: 600;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    .table tr:hover {
+        background-color: #f1f3f5;
+        transition: background-color 0.3s ease;
+    }
+
+    .table td {
+        color: #333;
+        font-size: 0.95em;
+    }
+
+    @media screen and (max-width: 600px) {
+        .table {
+            font-size: 0.8em;
+        }
+        .table th, .table td {
+            padding: 8px 10px;
+        }
+    }
+</style>
+
 {% block page_content %}
 <div class="page-header">
-  <h1>Olá, {% if name %} {{ name + ' ' + last_name }} {% else %} Estranho {% endif %}!</h1>
+    <section>
+        <h1>Usuários cadastrados</h1>
+        {% if userList %}
+        <table class="table">
+            <thead>
+                <tr>
+                    {% for column in userList[0].__table__.columns %}
+                        <th>{{ column.name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in userList %}
+                    <tr>
+                        {% for column in user.__table__.columns %}
+                            <td>{{ user[column.name] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </section>
+    <hr>
+  <h1>Olá, {% if name %} {{ name }} {% else %} Estranho {% endif %}!</h1>
   {% if not known %}
   <h3>-- Pleased to meet you! --</h3>
   {% else %}

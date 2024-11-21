@@ -22,7 +22,7 @@ moment = Moment(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-aula = "Aula 070"
+aula = "Aula 080"
 
 @app.shell_context_processor
 def make_shell_context():
@@ -47,7 +47,6 @@ class User(db.Model):
 
 class NameForm(FlaskForm):
     name = StringField('Informe o seu nome:', validators = [DataRequired()])
-    last_name = StringField('Informe o seu sobrenome:', validators = [DataRequired()])
     inst = StringField('Informe a sua Insituição de ensino:', validators = [DataRequired()])
     disc = SelectField('Informe a sua disciplina:', choices = ['DSWA5', 'DWBA4', 'Gestão de Projetos'], validators = [DataRequired()])
 
@@ -55,6 +54,11 @@ class NameForm(FlaskForm):
     def get_role_choices():
         return [(r.name, r.name) for r in Role.query.all()]
     role = SelectField('Informe o seu cargo:', choices=[], validators=[DataRequired()])
+
+    def get_last_name(self):
+        if self.name.data:
+            return self.name.data.split()[-1]
+        return ""
 
     submit = SubmitField('Submit')
 
@@ -68,7 +72,7 @@ def index():
         if user is None:
             user_data = {
                 'user_name': form.name.data,
-                'user_last_name': form.last_name.data,
+                'user_last_name': form.get_last_name(),
                 'user_ip': request.remote_addr,
                 'user_host': request.host_url,
                 'user_inst': form.inst.data,
@@ -90,7 +94,7 @@ def index():
             session['known'] = True
 
         session['name'] = form.name.data
-        session['last_name'] = form.last_name.data
+        session['last_name'] = form.get_last_name()
         session['ip'] = request.remote_addr
         session['host'] = request.host_url
         session['inst'] = form.inst.data
@@ -101,11 +105,11 @@ def index():
         ip=session.get('ip'),\
         host=session.get('host'),\
         known=session.get('known', False),\
-        name=session.get('name'),\
-        last_name=session.get('last_name'),\
+        name=form.name.data,\
         inst=session.get('inst'),\
         disc=session.get('disc'),\
-        role=session.get('role')
+        role=session.get('role'),\
+        userList=User.query.all()
     )
 
 @app.route('/user/<name>/<id>/<inst>/')
