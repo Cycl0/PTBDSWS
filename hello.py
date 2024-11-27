@@ -22,7 +22,7 @@ moment = Moment(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-aula = "Aula 080"
+aula = "Aula 090"
 
 @app.shell_context_processor
 def make_shell_context():
@@ -109,7 +109,8 @@ def index():
         inst=session.get('inst'),\
         disc=session.get('disc'),\
         role=session.get('role'),\
-        userList=User.query.all()
+        Role=Role,\
+        User=User
     )
 
 @app.route('/user/<name>/<id>/<inst>/')

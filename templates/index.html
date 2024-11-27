@@ -1,77 +1,57 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-<style>
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: 'Arial', sans-serif;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        background-color: white;
-    }
-
-    .table thead {
-        background-color: #4a90e2;
-        color: white;
-    }
-
-    .table th, .table td {
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    .table th {
-        text-transform: uppercase;
-        font-size: 0.9em;
-        letter-spacing: 0.1em;
-        font-weight: 600;
-    }
-
-    .table tr:nth-child(even) {
-        background-color: #f8f9fa;
-    }
-
-    .table tr:hover {
-        background-color: #f1f3f5;
-        transition: background-color 0.3s ease;
-    }
-
-    .table td {
-        color: #333;
-        font-size: 0.95em;
-    }
-
-    @media screen and (max-width: 600px) {
-        .table {
-            font-size: 0.8em;
-        }
-        .table th, .table td {
-            padding: 8px 10px;
-        }
-    }
-</style>
-
 {% block page_content %}
 <div class="page-header">
     <section>
         <h1>Usuários cadastrados</h1>
-        {% if userList %}
+        {% if User.query.all() %}
+        <h3>Quantidade: {{ User.query.count() }}</h3>
         <table class="table">
             <thead>
                 <tr>
-                    {% for column in userList[0].__table__.columns %}
-                        <th>{{ column.name }}</th>
+                    {% for column in User.query.all()[0].__table__.columns %}
+                    <th>{{ column.name }}</th>
                     {% endfor %}
+                    <th>Cargo</th>
                 </tr>
             </thead>
             <tbody>
-                {% for user in userList %}
+                {% for user in User.query.all() %}
                     <tr>
                         {% for column in user.__table__.columns %}
-                            <td>{{ user[column.name] }}</td>
+                        <td>{{ user[column.name] }}</td>
                         {% endfor %}
+                        <td>{{ Role.query.all()[user.user_role_id - 1].name }}</td>
                     </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </section>
+    <hr>
+     <section>
+        <h1>Relação de funções cadastradas</h1>
+        {% if User.query.all() %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Cargos</th>
+                    <th>Usuários</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for role in Role.query.all() %}
+                <tr>
+                    <td>{{ role.name }}</td>
+                    <td>
+                        <ol>
+                            {% for user in User.query.filter_by(user_role_id=role.id) %}
+                            <li>{{ user.user_name }}</li>
+                            {% endfor %}
+                        </ol>
+                    </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
