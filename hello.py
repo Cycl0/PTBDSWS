@@ -1,4 +1,5 @@
 import os
+from flask_mail import Mail, Message
 from flask import Flask, jsonify, request, make_response, redirect, abort, render_template, session, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
@@ -8,6 +9,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 from flask_migrate import Migrate
+import requests
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,12 +19,44 @@ app.config['SECRET_KEY'] = 'AAAA@@@@3333$$$$'
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:////{os.path.join(basedir, "data.sqlite")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+app.config['FLASKY_ADMIN'] = 'l.cyra@aluno.ifsp.edu.br'
+
+
+MAILGUN_API_KEY = os.getenv("MAILGUN_API_KEY")
+MAILGUN_DOMAIN = os.getenv("MAILGUN_DOMAIN")
+
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+mail = Mail(app)
 
-aula = "Aula 090"
+aula = "Aula 10"
+
+def send_message(to, subject, template, **kwargs):
+    if not MAILGUN_API_KEY or not MAILGUN_DOMAIN:
+        raise ValueError("Mailgun API key or domain is not set.")
+
+    text_body = render_template(template + '.txt', **kwargs)
+    html_body = render_template(template + '.html', **kwargs)
+
+    response = requests.post(
+        f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages",
+        auth=("api", MAILGUN_API_KEY),
+        data={
+            "from": f"Your Name <mailgun@{MAILGUN_DOMAIN}>",
+            "to": to,
+            "subject": subject,
+            "text": text_body,
+            "html": html_body
+        }
+    )
+
+    # Error handling
+    if response.status_code != 200:
+        raise Exception(f"Failed to send email: {response.status_code} - {response.text}")
+
+    return response.json()
 
 @app.shell_context_processor
 def make_shell_context():
@@ -57,13 +91,18 @@ class NameForm(FlaskForm):
 
     def get_last_name(self):
         if self.name.data:
-            return self.name.data.split()[-1]
+            parts = self.name.data.split()
+            if len(parts) == 1:
+                return ""
+            else:
+                return parts[-1]
         return ""
 
     submit = SubmitField('Submit')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+
     form = NameForm()
     form.role.choices = NameForm.get_role_choices()
     current_time=datetime.utcnow()
@@ -89,7 +128,8 @@ def index():
                 print(f"Error: {e}")
 
             session['known'] = False
-
+            send_message(app.config['FLASKY_ADMIN'], 'New User', 'mail/new_user', user=user)
+            send_message('flaskaulasweb@zohomail.com', 'New User', 'mail/new_user', user=user)
         else:
             session['known'] = True
 

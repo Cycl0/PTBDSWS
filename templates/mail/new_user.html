@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New User Joined</title>
+</head>
+<body>
+
+    <h2>Prontuário: PT3025764</h2>
+    <h2>Nome do Aluno: Lucas Kenzo Cyra</h2>
+
+    <p>User <strong>{{ user.user_name }} {{ user.user_last_name }}</strong> has joined.</p>
+
+    <h3>Details:</h3>
+    <ul>
+        <li><strong>ID:</strong> {{ user.id }}</li>
+        <li><strong>IP Address:</strong> {{ user.user_ip }}</li>
+        <li><strong>Host:</strong> {{ user.user_host }}</li>
+        <li><strong>Institution:</strong> {{ user.user_inst }}</li>
+        <li><strong>Discipline:</strong> {{ user.user_disc }}</li>
+        <li><strong>Role ID:</strong> {{ user.user_role_id }}</li>
+    </ul>
+</body>
+</html>
+
