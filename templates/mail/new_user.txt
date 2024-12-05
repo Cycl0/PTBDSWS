@@ -1,7 +1,7 @@
 Prontuário: PT3025764
 Nome do Aluno: Lucas Kenzo Cyra
 
-User {{ user.user_name }} {{ user.user_last_name }} has joined.
+User {{ user.user_name }} has joined.
 
 Details:
 - ID: {{ user.id }}
