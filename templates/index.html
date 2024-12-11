@@ -3,10 +3,27 @@
 
 {% block page_content %}
 <div class="page-header">
+    <h1>Olá, {% if name %} {{ name }} {% else %} Estranho {% endif %}!</h1>
+      {% if not known %}
+      <p>-- Pleased to meet you! --</p>
+      {% else %}
+      <p>-- Happy to see you again! --</p>
+      {% endif %}
+      <hr>
+      <p>A sua instuição de ensino: {{ inst }}</p>
+      <p>Está cursando a disciplina de: {{ disc }}</p>
+      <p>Seu cargo é {{ role }}</p>
+      <section>
+        <p>O IP do computador remoto: {{ ip }}</p>
+        <p>O host da aplicação: {{ host }}</p>
+      </section>
+      <hr>
+      {{ wtf.quick_form(form) }}
+    <hr>
     <section>
         <h1>Usuários cadastrados</h1>
         {% if User.query.all() %}
-        <h3>Quantidade: {{ User.query.count() }}</h3>
+        <p>Quantidade: {{ User.query.count() }}</p>
         <table class="table">
             <thead>
                 <tr>
@@ -57,22 +74,8 @@
         </table>
         {% endif %}
     </section>
-    <hr>
-  <h1>Olá, {% if name %} {{ name }} {% else %} Estranho {% endif %}!</h1>
-  {% if not known %}
-  <h3>-- Pleased to meet you! --</h3>
-  {% else %}
-  <h3>-- Happy to see you again! --</h3>
-  {% endif %}
-  <h2>A sua instuição de ensino é {{ inst }}</h2>
-  <h2>Está cursando a disciplina de {{ disc }}</h2>
-  <h2>Seu cargo é {{ role }}</h2>
-  <section>
-    <h3>O IP do computador remoto é: {{ ip }}</h3>
-    <h3>O host da aplicação é: {{ host }}</h3>
-  </section>
 </div>
-{{ wtf.quick_form(form) }}
+<hr>
 <br>
 <p>The local date and time is: {{ moment(current_time).format('LLLL') }}.</p>
 <p>That was {{ moment(current_time).fromNow(refresh=True) }}.</p>

@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_moment import Moment
 from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
+from wtforms import StringField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
 from flask_migrate import Migrate
 import requests
@@ -19,8 +19,8 @@ app.config['SECRET_KEY'] = 'AAAA@@@@3333$$$$'
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:////{os.path.join(basedir, "data.sqlite")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config['FLASKY_ADMIN'] = 'l.cyra@aluno.ifsp.edu.br'
-
+app.config['FLASKY_ADMIN_1'] = 'l.cyra@aluno.ifsp.edu.br'
+app.config['FLASKY_ADMIN_2'] = 'flaskaulasweb@zohomail.com'
 
 MAILGUN_API_KEY = os.getenv("MAILGUN_API_KEY")
 MAILGUN_DOMAIN = os.getenv("MAILGUN_DOMAIN")
@@ -31,7 +31,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 mail = Mail(app)
 
-aula = "Aula 10"
+aula = "Aula 11"
 
 def send_message(to, subject, template, **kwargs):
     if not MAILGUN_API_KEY or not MAILGUN_DOMAIN:
@@ -88,7 +88,8 @@ class NameForm(FlaskForm):
     def get_role_choices():
         return [(r.name, r.name) for r in Role.query.all()]
     role = SelectField('Informe o seu cargo:', choices=[], validators=[DataRequired()])
-
+    send_email_admin_1 = BooleanField(f'Deseja enviar e-mail para {app.config["FLASKY_ADMIN_1"]}')
+    send_email_admin_2 = BooleanField(f'Deseja enviar e-mail para {app.config["FLASKY_ADMIN_2"]}')
     def get_last_name(self):
         if self.name.data:
             parts = self.name.data.split()
@@ -128,8 +129,10 @@ def index():
                 print(f"Error: {e}")
 
             session['known'] = False
-            send_message(app.config['FLASKY_ADMIN'], 'New User', 'mail/new_user', user=user)
-            send_message('flaskaulasweb@zohomail.com', 'New User', 'mail/new_user', user=user)
+            if form.send_email_admin_1.data:
+                send_message(app.config['FLASKY_ADMIN_1'], 'New User', 'mail/new_user', user=user)
+            if form.send_email_admin_2.data:
+                send_message(app.config['FLASKY_ADMIN_2'], 'New User', 'mail/new_user', user=user)
         else:
             session['known'] = True
 
