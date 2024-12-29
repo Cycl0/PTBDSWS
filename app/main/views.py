@@ -36,18 +36,28 @@ def index():
                 print(f"Error: {e}")
                 session['known'] = False
 
-            send_message(
-                current_app.config.get('FLASKY_ADMIN_1'),
-                'New User',
-                'mail/new_user',
-                user=user
-            )
-            send_message(
-                current_app.config.get('FLASKY_ADMIN_2'),
-                'New User',
-                'mail/new_user',
-                user=user
-            )
+            if form.send_email_admin_1.data:
+                send_message(
+                    current_app.config.get('FLASKY_ADMIN_1'),
+                    'New User',
+                    'mail/new_user',
+                    user=user
+                )
+
+            if form.send_email_admin_2.data:
+                send_message(
+                    current_app.config.get('FLASKY_ADMIN_2'),
+                    'New User',
+                    'mail/new_user',
+                    user=user
+                )
+            if form.send_email_user.data is not "":
+                send_message(
+                    form.send_email_user.data,
+                    'New User',
+                    'mail/new_user',
+                    user=user
+                )
         else:
             session['known'] = True
 

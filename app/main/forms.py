@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, BooleanField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Email
 from flask import current_app
+from ..models import Role
+
 
 class NameForm(FlaskForm):
     name = StringField('Informe o seu nome:', validators=[DataRequired()])
@@ -14,13 +16,16 @@ class NameForm(FlaskForm):
 
     role = SelectField('Informe o seu cargo:', choices=[], validators=[DataRequired()])
 
-    send_email_admin_1 = BooleanField('Deseja enviar e-mail para admin 1?')
-    send_email_admin_2 = BooleanField('Deseja enviar e-mail para admin 2?')
+    send_email_user = StringField('*Apenas para recipientes autorizados* - Qual é o seu email (Envio de notificação do novo usuário)?', validators=[Email(message="Por favor insira um email válido")])
 
     def __init__(self, *args, **kwargs):
         super(NameForm, self).__init__(*args, **kwargs)
+        self.role.choices = self.get_role_choices()
         self.send_email_admin_1.label.text = f'Deseja enviar e-mail para {current_app.config["FLASKY_ADMIN_1"]}'
         self.send_email_admin_2.label.text = f'Deseja enviar e-mail para {current_app.config["FLASKY_ADMIN_2"]}'
+
+    send_email_admin_1 = BooleanField('Deseja enviar e-mail para admin 1?')
+    send_email_admin_2 = BooleanField('Deseja enviar e-mail para admin 2?')
 
     def get_last_name(self):
         if self.name.data:
