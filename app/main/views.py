@@ -204,7 +204,7 @@ def confirm(token):
 @login_required
 def resend_confirmation():
     token = current_user.generate_confirmation_token()
-    send_email(current_user.email, 'Confirm Your Account',
+    send_email(current_user.user_email, 'Confirm Your Account',
                '/auth/email/confirm', user=current_user, token=token)
     flash('A new confirmation email has been sent to you by email.')
     flash('<p>To confirm your account <a href="' + url_for('main.confirm', token=token, _external=True) + '">click here</a></p>')
@@ -224,7 +224,7 @@ def change_password():
             return redirect(url_for('main.index'))
         else:
             flash('Invalid password.')
-    return render_template("auth/change_password.html", form=form)
+    return render_template("/auth/change_password.html", form=form)
 
 
 @main.route('/auth/reset', methods=['GET', 'POST'])
@@ -278,7 +278,7 @@ def change_email_request():
             return redirect(url_for('main.index'))
         else:
             flash('Invalid email or password.')
-    return render_template("auth/change_email.html", form=form)
+    return render_template("/auth/change_email.html", form=form)
 
 
 @main.route('/auth/change_email/<token>')
