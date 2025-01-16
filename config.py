@@ -2,7 +2,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    SECRET_KEY = 'AAAA@@@@3333$$$$'
+    SECRET_KEY = os.getenv("SECRET_KEY")
     AULA = os.getenv("AULA")
     FLASKY_ADMIN_1 = os.getenv("FLASKY_ADMIN_1")
     FLASKY_ADMIN_2 = os.getenv("FLASKY_ADMIN_2")

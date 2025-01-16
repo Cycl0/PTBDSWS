@@ -3,7 +3,8 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Olá, {% if name %} {{ name }} {% else %} Estranho {% endif %}!</h1>
+    {% if name %}
+    <h1>Olá, {{ name }} ({{ user_name }})!</h1>
       {% if not known %}
       <p>-- Pleased to meet you! --</p>
       {% else %}
@@ -17,9 +18,8 @@
         <p>O IP do computador remoto: {{ ip }}</p>
         <p>O host da aplicação: {{ host }}</p>
       </section>
-      <hr>
-      {{ wtf.quick_form(form) }}
     <hr>
+    {% endif %}
     <section>
         <h1>Usuários cadastrados</h1>
         {% if User.query.all() %}
@@ -35,12 +35,18 @@
             </thead>
             <tbody>
                 {% for user in User.query.all() %}
-                    <tr>
-                        {% for column in user.__table__.columns %}
-                        <td>{{ user[column.name] }}</td>
-                        {% endfor %}
-                        <td>{{ Role.query.all()[user.user_role_id - 1].name }}</td>
-                    </tr>
+                <tr>
+                    {% for column in user.__table__.columns %}
+                    <td>{{ user[column.name] }}</td>
+                    {% endfor %}
+                    <td>
+                        {% if user.user_role_id is not none %}
+                            {{ Role.query.all()[user.user_role_id - 1].name }}
+                        {% else %}
+                            No Role
+                        {% endif %}
+                    </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
