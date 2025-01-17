@@ -11,28 +11,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">Avaliação contínua: {{ aula }}</a>
+      <a class="navbar-brand" href="/">Avaliação semestral</a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="/">Home</a></li>
-        <li><a href="/user/Lucas%20Kenzo%20Cyra/PT3025764/IFSP/">Identificação</a></li>
-        <li><a href="/contextorequisicao/Lucas%20Kenzo%20Cyra">Contexto da requisição</a></li>
+        <li><a href="/professores">Cadastro de professores</a></li>
+        <li><a href="/disciplinas">Cadastro de disciplinas</a></li>
+        <li><a href="/alunos">Cadastro de alunos</a></li>
+        <li><a href="/cursos">Cadastro de cursos</a></li>
+        <li><a href="/ocorrencias">Cadastro de ocorrências</a></li>
       </ul>
-    <ul class="nav navbar-nav navbar-right">
-            {% if current_user.is_authenticated %}
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="/auth/change_password">Change Password</a></li>
-                    <li><a href="/auth/change_email">Change Email</a></li>
-                    <li><a href="/auth/logout">Log Out</a></li>
-                </ul>
-            </li>
-            {% else %}
-            <li><a href="/auth/login">Log In</a></li>
-            {% endif %}
-        </ul>
     </div>
   </div>
 </div>
@@ -40,13 +28,6 @@
 
 {% block content %}
 <div class="container">
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-warning">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      {{ message|safe }}
-  </div>
-  {% endfor %}
-
   {% block page_content %}{% endblock %}
 </div>
 {% endblock %}

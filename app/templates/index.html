@@ -1,84 +1,11 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
 <div class="page-header">
-    {% if name %}
-    <h1>Olá, {{ name }} ({{ user_name }})!</h1>
-      {% if not known %}
-      <p>-- Pleased to meet you! --</p>
-      {% else %}
-      <p>-- Happy to see you again! --</p>
-      {% endif %}
-      <hr>
-      <p>A sua instuição de ensino: {{ inst }}</p>
-      <p>Está cursando a disciplina de: {{ disc }}</p>
-      <p>Seu cargo é {{ role }}</p>
-      <section>
-        <p>O IP do computador remoto: {{ ip }}</p>
-        <p>O host da aplicação: {{ host }}</p>
-      </section>
-    <hr>
-    {% endif %}
     <section>
-        <h1>Usuários cadastrados</h1>
-        {% if User.query.all() %}
-        <p>Quantidade: {{ User.query.count() }}</p>
-        <table class="table">
-            <thead>
-                <tr>
-                    {% for column in User.query.all()[0].__table__.columns %}
-                    <th>{{ column.name }}</th>
-                    {% endfor %}
-                    <th>Cargo</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in User.query.all() %}
-                <tr>
-                    {% for column in user.__table__.columns %}
-                    <td>{{ user[column.name] }}</td>
-                    {% endfor %}
-                    <td>
-                        {% if user.user_role_id is not none %}
-                            {{ Role.query.all()[user.user_role_id - 1].name }}
-                        {% else %}
-                            No Role
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% endif %}
-    </section>
-    <hr>
-     <section>
-        <h1>Relação de funções cadastradas</h1>
-        {% if User.query.all() %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Cargos</th>
-                    <th>Usuários</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for role in Role.query.all() %}
-                <tr>
-                    <td>{{ role.name }}</td>
-                    <td>
-                        <ol>
-                            {% for user in User.query.filter_by(user_role_id=role.id) %}
-                            <li>{{ user.user_name }}</li>
-                            {% endfor %}
-                        </ol>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% endif %}
+        <h1>Avaliação semestral</h1>
+        <h2>Aluno: Lucas Kenzo Cyra</h2>
+        <h2>Prontuário: PT3025764</h2>
     </section>
 </div>
 <hr>
